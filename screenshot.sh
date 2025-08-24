@@ -5,11 +5,12 @@
 # CREATED ON:  2019-11-10
 #
 # EDITED BY:   Tyler Heck
-# EDITED ON:   2022-11-15
+# EDITED ON:   2024-04-13
 #
 # CHANGELOG:   2019-11-10 (1.0.0)   Initial version.
 #              2019-11-13 (1.1.0)   Add font option.
 #              2022-11-15 (1.2.0)   Add mode option.
+#              2024-04-13 (1.2.1)   Add text quotes.
 #
 # DESCRIPTION: Create a single image with a user-specified array of screenshots.
 # ==============================================================================
@@ -179,7 +180,7 @@ else
 
     for (( i=0; i<${#text[@]}; i++ ))
     do
-        command+=" -page +$text_offset+$x $label${text[$i]}"
+        command+=" -page +$text_offset+$x $label${text[$i]// /\\ }"
         ((text_offset+=x_offset))
     done
 
@@ -207,9 +208,11 @@ else
 fi
 
 # EXAMPLES
-# 2019-11-10
+# 2019-11-10 (ImageMagick 7.0.9-2)
 # magick convert -size 2280x4060 xc:#eee -page +40+40 -background #eee -fill #333 -gravity center -pointsize 64 -size 1080x70 label:Screenshot1 -page +1160+40 -background #eee -fill #333 -gravity center -pointsize 64 -size 1080x70 label:Screenshot2 -page +40+140 screenshot1.png -page +1160+140 screenshot2.png -flatten output.png
-# 2019-11-13
+# 2019-11-13 (ImageMagick 7.0.9-2)
 # magick convert -size 2280x4060 xc:#eee -page +40+40 -background #eee -fill #333 -font Roboto.ttf -gravity center -pointsize 64 -size 1080x70 label:Screenshot1 -page +1160+40 -background #eee -fill #333 -font Roboto.ttf -gravity center -pointsize 64 -size 1080x70 label:Screenshot2 -page +40+140 screenshot1.png -page +1160+140 screenshot2.png -flatten output.png
-# 2022-11-15
+# 2022-11-15 (ImageMagick 7.0.9-2)
 # magick convert -size 2280x4060 xc:#333 -page +40+40 -background #333 -fill #eee -font Roboto.ttf -gravity center -pointsize 64 -size 1080x70 label:Screenshot1 -page +1160+40 -background #333 -fill #eee -font Roboto.ttf -gravity center -pointsize 64 -size 1080x70 label:Screenshot2 -page +40+140 screenshot1.png -page +1160+140 screenshot2.png -flatten output.png
+# 2025-04-13 (ImageMagick 7.1.1-47)
+# magick convert -quiet -size 2280x4060 xc:"#333" -page +40+40 -background "#333" -fill "#eee" -font Roboto.ttf -gravity center -pointsize 64 -size 1080x70 label:Screenshot\ 1 -page +1160+40 -background "#333" -fill "#eee" -font Roboto.ttf -gravity center -pointsize 64 -size 1080x70 label:Screenshot\ 2 -page +40+140 screenshot1.png -page +1160+140 screenshot2.png -flatten output.png

@@ -5,14 +5,16 @@
 # CREATED ON:  2019-11-10
 #
 # EDITED BY:   Tyler Heck
-# EDITED ON:   2019-11-10
+# EDITED ON:   2019-11-13
 #
 # CHANGELOG:   2019-11-10 (1.0.0)   Initial version.
+#              2019-11-13 (1.1.0)   Add font option.
 #
 # DESCRIPTION: Create a single image with a user-specified array of screenshots.
 # ==============================================================================
 
-USAGE="USAGE: $0 -l [width:height] -o [output] -s [screenshot1] -s [screenshot2] -t [text1] -t [text2]"
+FONT="Roboto.ttf"
+USAGE="USAGE: $0 -f [font(optional)] -l [width:height] -o [output] -s [screenshot1] -s [screenshot2] -t [text1] -t [text2]"
 
 if [ $# -eq 0 ]
 then
@@ -20,9 +22,11 @@ then
     echo "$USAGE"
     exit 1
 else
-    while getopts ":l:o:s:t:" opt
+    while getopts ":f:l:o:s:t:" opt
     do
         case $opt in
+            f)  font="$OPTARG"
+                ;;
             l)  layout="$OPTARG"
                 ;;
             o)  output="$OPTARG"
@@ -87,6 +91,26 @@ else
         exit 1
     fi
 
+    # VERIFY FONT TYPEFACE EXISTS
+
+    if [ -z "$font" ]
+    then
+        font=$FONT
+    fi
+
+    if [ -z "$(magick identify -list font | grep "$font" | tr -d \'\"\')" ] && [ ! -f "$font" ]
+    then
+        if [ "$font" = $FONT ]
+        then
+            echo "ERROR: $font font doesn't exist.  Choose a font with -f or add $font."
+        else
+            echo "ERROR: $font font doesn't exist.  Check fonts with \"magick identify -list font\" command."
+        fi
+
+        echo "$USAGE"
+        exit 1
+    fi
+
     # CREATE COMMAND AND CONSTANTS
 
     ((spacing=40))
@@ -100,7 +124,7 @@ else
     ((y_text=70))
 
     size="$x_text"x"$y_text"
-    label="-background #eee -fill #333 -gravity center -pointsize 64 -size $size label:"
+    label="-background #eee -fill #333 -font \"$font\" -gravity center -pointsize 64 -size $size label:"
 
     command="magick convert "
 
@@ -155,5 +179,8 @@ else
     # echo "$command" >> screenshot.sh
 fi
 
-# EXAMPLE
+# EXAMPLES
+# 2019-11-10
 # magick convert -size 2280x4060 xc:#eee -page +40+40 -background #eee -fill #333 -gravity center -pointsize 64 -size 1080x70 label:Screenshot1 -page +1160+40 -background #eee -fill #333 -gravity center -pointsize 64 -size 1080x70 label:Screenshot2 -page +40+140 screenshot1.png -page +1160+140 screenshot2.png -flatten output.png
+# 2019-11-13
+# magick convert -size 2280x4060 xc:#eee -page +40+40 -background #eee -fill #333 -font Roboto.ttf -gravity center -pointsize 64 -size 1080x70 label:Screenshot1 -page +1160+40 -background #eee -fill #333 -font Roboto.ttf -gravity center -pointsize 64 -size 1080x70 label:Screenshot2 -page +40+140 screenshot1.png -page +1160+140 screenshot2.png -flatten output.png

@@ -5,16 +5,19 @@
 # CREATED ON:  2019-11-10
 #
 # EDITED BY:   Tyler Heck
-# EDITED ON:   2019-11-13
+# EDITED ON:   2022-11-15
 #
 # CHANGELOG:   2019-11-10 (1.0.0)   Initial version.
 #              2019-11-13 (1.1.0)   Add font option.
+#              2022-11-15 (1.2.0)   Add mode option.
 #
 # DESCRIPTION: Create a single image with a user-specified array of screenshots.
 # ==============================================================================
 
+COLOR_3="#333"
+COLOR_E="#eee"
 FONT="Roboto.ttf"
-USAGE="USAGE: $0 -f [font(optional)] -l [width:height] -o [output] -s [screenshot1] -s [screenshot2] -t [text1] -t [text2]"
+USAGE="USAGE: $0 -f [font(optional)] -l [width:height] -m [mode(optional)]  -o [output] -s [screenshot1] -s [screenshot2] -t [text1] -t [text2]"
 
 if [ $# -eq 0 ]
 then
@@ -22,12 +25,14 @@ then
     echo "$USAGE"
     exit 1
 else
-    while getopts ":f:l:o:s:t:" opt
+    while getopts ":f:l:m:o:s:t:" opt
     do
         case $opt in
             f)  font="$OPTARG"
                 ;;
             l)  layout="$OPTARG"
+                ;;
+            m)  mode="$OPTARG"
                 ;;
             o)  output="$OPTARG"
                 ;;
@@ -45,6 +50,28 @@ else
                 ;;
         esac
     done
+
+    # SET COLORS FROM MODE ARGUMENT
+
+    if [ -z "$mode" ]
+    then
+        background=$COLOR_E
+        foreground=$COLOR_3
+    else
+        case $mode in
+            d|dark|D|Dark)
+                background=$COLOR_3
+                foreground=$COLOR_E
+                ;;
+            l|light|L|Light)
+                background=$COLOR_E
+                foreground=$COLOR_3
+                ;;
+            \?) echo "ERROR: Mode must be Dark(D) or Light(L)."
+                echo "$USAGE"
+                exit 1
+        esac
+    fi
 
     # GET DIMENSIONS FROM LAYOUT ARGUMENT
 
@@ -124,7 +151,7 @@ else
     ((y_text=70))
 
     size="$x_text"x"$y_text"
-    label="-background #eee -fill #333 -font \"$font\" -gravity center -pointsize 64 -size $size label:"
+    label="-background \"$background\" -fill \"$foreground\" -font \"$font\" -gravity center -pointsize 64 -size $size label:"
 
     command="magick convert "
 
@@ -144,7 +171,7 @@ else
     done
 
     size="$background_width"x"$background_height"
-    command+="-size $size xc:#eee"
+    command+="-size $size xc:\"$background\" "
 
     # CREATE COMMAND FOR LABELS WITH DIMENSIONS
 
@@ -184,3 +211,5 @@ fi
 # magick convert -size 2280x4060 xc:#eee -page +40+40 -background #eee -fill #333 -gravity center -pointsize 64 -size 1080x70 label:Screenshot1 -page +1160+40 -background #eee -fill #333 -gravity center -pointsize 64 -size 1080x70 label:Screenshot2 -page +40+140 screenshot1.png -page +1160+140 screenshot2.png -flatten output.png
 # 2019-11-13
 # magick convert -size 2280x4060 xc:#eee -page +40+40 -background #eee -fill #333 -font Roboto.ttf -gravity center -pointsize 64 -size 1080x70 label:Screenshot1 -page +1160+40 -background #eee -fill #333 -font Roboto.ttf -gravity center -pointsize 64 -size 1080x70 label:Screenshot2 -page +40+140 screenshot1.png -page +1160+140 screenshot2.png -flatten output.png
+# 2022-11-15
+# magick convert -size 2280x4060 xc:#333 -page +40+40 -background #333 -fill #eee -font Roboto.ttf -gravity center -pointsize 64 -size 1080x70 label:Screenshot1 -page +1160+40 -background #333 -fill #eee -font Roboto.ttf -gravity center -pointsize 64 -size 1080x70 label:Screenshot2 -page +40+140 screenshot1.png -page +1160+140 screenshot2.png -flatten output.png

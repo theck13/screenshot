@@ -33,6 +33,8 @@ In the compiled command run at the end of the script, it uses the `magick` comma
 
 Here are a few example uses with explanations to help understand how to use `screenshot.sh`.
 
+### Simple
+
 ```bash
 ./screenshot.sh -l 2:1 -o output.png -s screenshot1.png -s screenshot2.png -t Text1 -t Text2
 ```
@@ -46,6 +48,8 @@ The command above will create the `output.png` file, which will have two columns
     />
 </kbd>
 
+### Style
+
 ```bash
 ./screenshot.sh -m Dark -o publication_style_dark_light_times.png -l 2:3 -f "Times New Roman" -t "Publication Style [Dark]" -t "Publication Style [Light]" -s add_style_setting_publication_dark_01.png -s add_style_setting_publication_dark_02.png -s add_style_setting_publication_dark_03.png -s add_style_setting_publication_light_01.png -s add_style_setting_publication_light_02.png -s add_style_setting_publication_light_03.png
 ```
@@ -58,6 +62,8 @@ The command above will create the `publication_style_dark_light_times.png` file,
         src="https://github.com/user-attachments/assets/631d272b-496c-46de-bd2b-a5828d9a6b81"
     />
 </kbd>
+
+### Separate
 
 ```bash
 ./screenshot.sh -m Dark -o /Users/Tyler/Documents/before_after_compare.png -l 3:6 -f Helvetica -t Before -t After -t Compare -s ~/Downloads/2339_text_field_background_after_dark_default.png -s ~/Downloads/2339_text_field_background_after_dark_disabled.png -s ~/Downloads/2339_text_field_background_after_dark_error.png -s ~/Downloads/2339_text_field_background_after_light_default.png -s ~/Downloads/2339_text_field_background_after_light_disabled.png -s ~/Downloads/2339_text_field_background_after_light_error.png -s ~/Downloads/2339_text_field_background_before_dark_default.png -s ~/Downloads/2339_text_field_background_before_dark_disabled.png -s ~/Downloads/2339_text_field_background_before_dark_error.png -s ~/Downloads/2339_text_field_background_before_light_default.png -s ~/Downloads/2339_text_field_background_before_light_disabled.png -s ~/Downloads/2339_text_field_background_before_light_error.png -s ~/Downloads/2339_text_field_background_compare_dark_default.png -s ~/Downloads/2339_text_field_background_compare_dark_disabled.png -s ~/Downloads/2339_text_field_background_compare_dark_error.png -s ~/Downloads/2339_text_field_background_compare_light_default.png -s ~/Downloads/2339_text_field_background_compare_light_disabled.png -s ~/Downloads/2339_text_field_background_compare_light_error.png 
